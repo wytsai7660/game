@@ -41,7 +41,7 @@ local button = widget.newButton {
     end,
     onRelease = function(event)
         event.target.alpha = 1
-        composer.gotoScene("draw box", { effect = "fade", time = 500 })
+        composer.gotoScene("draw_box", { effect = "fade", time = 500 })
     end,
     x = display.contentCenterX + 50,
     y = 100
