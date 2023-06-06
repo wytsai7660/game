@@ -43,7 +43,7 @@ function scene:create(event)
 
 
     --player
-    player = display.newImageRect("images/coin.png", 50, 50) -- FIXME: change to player image
+    player = display.newImageRect("images/player.png", 50, 50)
     player.x = display.contentCenterX
     player.y = display.contentCenterY
     physics.addBody(player, "dynamic")
