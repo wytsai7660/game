@@ -4,14 +4,14 @@ physics.start()
 
 local scene = composer.newScene()
 
-
-
+local riverbank
+local player
 
 function scene:create(event)
-    local scene_group = self.view
+    -- local scene_group = self.view
     --background
     local river = display.newImage("images/river.png", display.contentCenterX, display.contentCenterY)
-    local riverbank = display.newImage("images/riverbank.png", display.contentCenterX, display.contentCenterY)
+    riverbank = display.newImage("images/riverbank.png", display.contentCenterX, display.contentCenterY)
     local screen_ratio = display.contentHeight / display.contentWidth
     riverbank.width = display.contentWidth - 100 -- weird, but works
     riverbank.height = display.contentHeight
@@ -24,101 +24,23 @@ function scene:create(event)
         river.width = river.height / pic_ratio
     end
 
+    -- scene_group:insert(river)
+    -- scene_group:insert(riverbank)
+
     --player
-    local player = display.newImageRect("images/bomb.png", 50, 50) -- FIXME: change to player image
+    player = display.newImageRect("images/coin.png", 50, 50) -- FIXME: change to player image
     player.x = display.contentCenterX
     player.y = display.contentCenterY
     physics.addBody(player, "dynamic")
     player.gravityScale = 0
 
-
-    local move_time = 1 -- optional
-    local touch_x
-    local on_touch
-    local move = function()
-        if touch_x == player.x then return end
-        local x
-        if touch_x > player.x then
-            x = math.min(touch_x, player.x + 10)
-        else
-            x = math.max(touch_x, player.x - 10)
-        end
-        transition.to(player, { x = x, time = math.abs(x - player.x) * move_time, onComplete = on_touch })
-    end
-
-    on_touch = function(event)
-        if event.phase == "began" or event.phase == "moved" or event.phase == "stationary" then -- weird issue: using only 'else' will make the player movement not continuous
-            if event.x < 100 then
-                touch_x = 100
-            elseif event.x > display.contentWidth - 100 then
-                touch_x = display.contentWidth - 100
-            else
-                touch_x = event.x
-            end
-        elseif event.phase == "ended" then
-            transition.cancel(player)
-            return
-        end
-        move()
-    end
+    -- scene_group:insert(player)
 
 
 
-    scene_group:insert(player)
+
     -- scene_group:insert(move)
     -- scene_group:insert(on_touch)
-
-
-
-    -- new object
-    local new_obj = function(pic, width, height, body)
-        local obj = display.newImageRect(pic, width, height)
-        riverbank:toFront()
-        player:toFront()
-        if pic == "images/swirl.png" then
-            obj.x = display.contentCenterX
-        else
-            obj.x = math.random(75, display.contentWidth - 75)
-        end
-        obj.y = -10
-
-        if pic == "images/swirl.png" then
-            physics.addBody(obj, "dynamic", { isSensor = true })
-            obj.gravityScale = 0
-            obj:addEventListener("collision", function(event)
-                if event.other == player then
-                    composer.gotoScene("game", { effect = "fade", time = 500, params = { score = Score } })
-                end
-            end)
-
-            transition.to(obj,
-                {
-                    y = display.contentHeight,
-                    rotation = obj.rotation + 360,
-                    time = 5000,
-                    iterations = 0,
-                    deltaAngle = 45,
-                    onComplete = function() obj:removeSelf() end
-                })
-        else
-            if body then
-                physics.addBody(obj, "dynamic")
-                obj.gravityScale = 0
-            end
-            transition.to(obj,
-                {
-                    y = display.contentHeight,
-                    time = math.random(1000, 3000) / (Score / 100 + 0.5),
-                    onComplete = function() obj:removeSelf() end
-                })
-        end
-    end
-
-
-    -- elements
-    local background_elements = { "leaf1", "leaf2", "leaf3", "starfish", "conch", "grass" }
-    local obstacle_elements = { "stone1", "stone2", "stone3", "stone4", "stone5", "driftwood1", "driftwood2" }
-
 
     -- score
     local scoredisplay = display.newText("Score : " .. Score, display.contentCenterX, 25, system.nativeFont, 18)
@@ -180,13 +102,95 @@ function scene:create(event)
 end
 
 function scene:show(event)
+    local scene_group = self.view
+
+    local move_time = 1 -- optional
+    local touch_x
+    local on_touch
+    local move = function()
+        if touch_x == player.x then return end
+        local x
+        if touch_x > player.x then
+            x = math.min(touch_x, player.x + 10)
+        else
+            x = math.max(touch_x, player.x - 10)
+        end
+        transition.to(player, { x = x, time = math.abs(x - player.x) * move_time, onComplete = on_touch })
+    end
+
+    on_touch = function(event)
+        if event.phase == "began" or event.phase == "moved" or event.phase == "stationary" then -- weird issue: using only 'else' will make the player movement not continuous
+            if event.x < 100 then
+                touch_x = 100
+            elseif event.x > display.contentWidth - 100 then
+                touch_x = display.contentWidth - 100
+            else
+                touch_x = event.x
+            end
+        elseif event.phase == "ended" then
+            transition.cancel(player)
+            return
+        end
+        move()
+    end
+
     Runtime:addEventListener("touch", on_touch)
+
+    -- new object
+    local new_obj = function(pic, width, height, body)
+        local obj = display.newImageRect(pic, width, height)
+        riverbank:toFront()
+        player:toFront()
+        if pic == "images/swirl.png" then
+            obj.x = display.contentCenterX
+        else
+            obj.x = math.random(75, display.contentWidth - 75)
+        end
+        obj.y = -10
+
+        if pic == "images/swirl.png" then
+            physics.addBody(obj, "dynamic", { isSensor = true })
+            obj.gravityScale = 0
+            obj:addEventListener("collision", function(event)
+                if event.other == player then
+                    composer.gotoScene("game", { effect = "fade", time = 500, params = { score = Score } })
+                end
+            end)
+
+            transition.to(obj,
+                {
+                    y = display.contentHeight,
+                    rotation = obj.rotation + 360,
+                    time = 5000,
+                    iterations = 0,
+                    deltaAngle = 45,
+                    onComplete = function() obj:removeSelf() end
+                })
+        else
+            if body then
+                physics.addBody(obj, "dynamic")
+                obj.gravityScale = 0
+            end
+            transition.to(obj,
+                {
+                    y = display.contentHeight,
+                    time = math.random(1000, 3000) / (Score / 100 + 0.5),
+                    onComplete = function() obj:removeSelf() end
+                })
+        end
+    end
 
     -- waves
     timer.performWithDelay(math.random(1000, 1500) / (Score / 100 + 0.5),
         function() new_obj("images/wave1.png", math.random(50, 100), math.random(50, 100)) end, 0)
     timer.performWithDelay(math.random(500, 1000) / (Score / 100 + 0.5),
         function() new_obj("images/wave2.png", math.random(50, 100), math.random(50, 100)) end, 0)
+
+
+    -- elements
+    local background_elements = { "leaf1", "leaf2", "leaf3", "starfish", "conch", "grass" }
+    local obstacle_elements = { "stone1", "stone2", "stone3", "stone4", "stone5", "driftwood1", "driftwood2" }
+
 
     -- background only
     timer.performWithDelay(math.random(1000, 3000) / (Score / 100 + 0.5),

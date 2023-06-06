@@ -23,7 +23,6 @@ function scene:create(event)
     local transparentBox = {}
     for i = 1, 16 do
         box[i] = display.newImageRect("images/box.png", 50, 50)
-        scene_group:insert(box[i])
         box[i].x = -20 + (i % 4) * 75
         box[i].y = 150 + (i / 4) * 100
         box[i].boxIndex = i
