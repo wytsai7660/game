@@ -1,14 +1,9 @@
------------------------------------------------------------------------------------------
---
--- main.lua
---
------------------------------------------------------------------------------------------
-
--- Your code here
 local composer = require("composer")
 
 local scene = composer.newScene()
 
+local star = {}
+local box = {}
 
 function scene:create(event)
     local scene_group = self.view
@@ -23,31 +18,16 @@ function scene:create(event)
 
         return array
     end
-    local star = {}
-    box = {}
+
+
     local transparentBox = {}
     for i = 1, 16 do
-        box[i]   = display.newImageRect("images/box.png", 50, 50)
+        box[i] = display.newImageRect("images/box.png", 50, 50)
+        scene_group:insert(box[i])
         box[i].x = -20 + (i % 4) * 75
         box[i].y = 150 + (i / 4) * 100
-
-        -- box[i] = display.newImageRect("images/box.png", 50, 50)
-
-        -- if i%4 <= 4 then
-        -- box[i].x = -20 + (i%4) * 75
-        -- box[i].y = 150+(i/4) *100
-        -- elseif i > 4 and i <= 8 then
-        --     box[i].x = -20 + (i - 4) * 75
-        --     box[i].y = 250
-        -- elseif i > 8 and i <= 12 then
-        --     box[i].x = -20 + (i - 8) * 75
-        --     box[i].y = 350
-        -- elseif i > 12 and i <= 16 then
-        --     box[i].x = -20 + (i - 12) * 75
-        --     box[i].y = 450
-        -- end
+        box[i].boxIndex = i
     end
-    scene_group:insert(star)
     scene_group:insert(box)
     local numbers = { 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8 }
     numbers = shuffle(numbers)
@@ -67,7 +47,7 @@ end
 function scene:show(event)
     local sceneGroup = self.view
     local phase = event.phase
-
+    print(box[i])
     if (phase == "will") then
         local tapnum = 0
         local a
@@ -129,7 +109,7 @@ function scene:show(event)
         end
 
         for i = 1, 16 do
-            box[i].boxIndex = i
+            -- box[i].boxIndex = i
             transition.to(box[i], {
                 y = box[i].y - 50,
                 onComplete = function()
@@ -159,7 +139,7 @@ function scene:hide(event)
     end
 end
 
-scene:addEventListener("create", scene)
+-- scene:addEventListener("create", scene)
 scene:addEventListener("show", scene)
 scene:addEventListener("hide", scene)
 
