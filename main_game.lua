@@ -9,7 +9,7 @@ local player
 
 function scene:create(event)
     -- local scene_group = self.view
-    --background
+    -- background
     local river = display.newImage("images/river.png", display.contentCenterX, display.contentCenterY)
     riverbank = display.newImage("images/riverbank.png", display.contentCenterX, display.contentCenterY)
     local screen_ratio = display.contentHeight / display.contentWidth
