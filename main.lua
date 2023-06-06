@@ -32,3 +32,46 @@ local button = widget.newButton {
     y = display.contentCenterY + 125
 }
 button:scale(0.1, 0.1)
+
+
+local button = widget.newButton {
+    defaultFile = "images/start_btn.png",
+    onPress = function(event)
+        event.target.alpha = 0.75
+    end,
+    onRelease = function(event)
+        event.target.alpha = 1
+        composer.gotoScene("draw box", { effect = "fade", time = 500 })
+    end,
+    x = display.contentCenterX + 50,
+    y = 100
+}
+button:scale(0.01, 0.01)
+
+local button = widget.newButton {
+    defaultFile = "images/start_btn.png",
+    onPress = function(event)
+        event.target.alpha = 0.75
+    end,
+    onRelease = function(event)
+        event.target.alpha = 1
+        composer.gotoScene("getcoin", { effect = "fade", time = 500 })
+    end,
+    x = display.contentCenterX + 50,
+    y = 150
+}
+button:scale(0.01, 0.01)
+
+local button = widget.newButton {
+    defaultFile = "images/start_btn.png",
+    onPress = function(event)
+        event.target.alpha = 0.75
+    end,
+    onRelease = function(event)
+        event.target.alpha = 1
+        composer.gotoScene("tug of war", { effect = "fade", time = 500 })
+    end,
+    x = display.contentCenterX + 50,
+    y = 200
+}
+button:scale(0.01, 0.01)
